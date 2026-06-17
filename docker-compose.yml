@@ -1,0 +1,12 @@
+services:
+  mockspotify:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - MOCKSPOTIFY_DB=/app/data/mockspotify.db
+      - MOCKSPOTIFY_PORT=8090
+      - MOCKSPOTIFY_TOKEN=mockspotify-dev-token-2026

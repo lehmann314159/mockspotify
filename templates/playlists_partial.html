@@ -1,0 +1,24 @@
+{{define "playlists_partial.html"}}
+<table class="data-table">
+  <thead><tr><th>Name</th><th>Genre</th><th>Tracks</th><th></th></tr></thead>
+  <tbody>
+  {{range .Playlists}}
+  <tr id="playlist-{{.ID}}">
+    <td><a href="/playlists/{{.ID}}">{{.Name}}</a></td>
+    <td><span class="badge">{{.Genre}}</span></td>
+    <td>{{.TrackCount}}</td>
+    <td>
+      <button class="btn-danger"
+        hx-delete="/api/playlists/{{.ID}}"
+        hx-confirm="Delete {{.Name}}?"
+        hx-target="#playlist-{{.ID}}"
+        hx-swap="outerHTML">Delete</button>
+    </td>
+  </tr>
+  {{else}}
+  <tr><td colspan="4" class="empty">No playlists found.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{template "pagination" .}}
+{{end}}

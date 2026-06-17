@@ -1,0 +1,23 @@
+{{define "content"}}
+<p class="muted">{{.Playlist.Genre}} &bull; {{.Total}} tracks</p>
+<p style="margin: 8px 0 20px; color: var(--muted);">{{.Playlist.Description}}</p>
+<table class="data-table">
+  <thead><tr><th>#</th><th>Title</th><th>Artist</th><th>BPM</th><th>Key</th><th>Camelot</th><th>Duration</th></tr></thead>
+  <tbody>
+  {{range .Items}}
+  <tr>
+    <td class="muted">{{.Position}}</td>
+    <td>{{.Track.Title}}</td>
+    <td class="muted">{{.Track.ArtistName}}</td>
+    <td>{{printf "%.1f" .Track.Tempo}}</td>
+    <td>{{.Track.KeyOf}}</td>
+    <td><span class="badge camelot">{{.Track.CamelotCode}}</span></td>
+    <td class="muted">{{formatDuration .Track.DurationMS}}</td>
+  </tr>
+  {{else}}
+  <tr><td colspan="7" class="empty">No tracks in this playlist.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{template "pagination" .}}
+{{end}}

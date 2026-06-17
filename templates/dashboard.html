@@ -1,0 +1,13 @@
+{{define "content"}}
+<div class="stats-grid">
+  {{range .Stats}}
+  <div class="stat-card">
+    <div class="stat-genre">{{.Genre}}</div>
+    <div class="stat-row"><span>Artists</span><span class="accent">{{.Artists}}</span></div>
+    <div class="stat-row"><span>Albums</span><span class="accent">{{.Albums}}</span></div>
+    <div class="stat-row"><span>Tracks</span><span class="accent">{{.Tracks}}</span></div>
+    <div class="stat-row"><span>Playlists</span><span class="accent">{{.Playlists}}</span></div>
+  </div>
+  {{end}}
+</div>
+{{end}}

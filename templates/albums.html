@@ -1,0 +1,15 @@
+{{define "content"}}
+<div class="filter-bar">
+  <input type="text" name="genre" placeholder="Filter by genre"
+    value="{{.Genre}}"
+    hx-get="/albums" hx-target="#results" hx-trigger="input changed delay:300ms"
+    hx-include="[name='genre'],[name='artist_id']">
+  <input type="text" name="artist_id" placeholder="Artist ID"
+    value="{{.ArtistID}}"
+    hx-get="/albums" hx-target="#results" hx-trigger="input changed delay:300ms"
+    hx-include="[name='genre'],[name='artist_id']">
+</div>
+<div id="results">
+  {{template "albums_partial.html" .}}
+</div>
+{{end}}

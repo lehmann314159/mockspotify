@@ -1,0 +1,19 @@
+{{define "pagination"}}
+{{if gt .TotalPages 1}}
+<div class="pagination">
+  {{if gt .Page 1}}
+  <a class="page-btn"
+     hx-get="{{.BasePath}}?{{.QueryParams}}&offset={{prevOffset .Page .Limit}}"
+     hx-target="#results"
+     hx-push-url="true">&#8592; Prev</a>
+  {{end}}
+  <span class="page-info">Page {{.Page}} of {{.TotalPages}}</span>
+  {{if lt .Page .TotalPages}}
+  <a class="page-btn"
+     hx-get="{{.BasePath}}?{{.QueryParams}}&offset={{nextOffset .Page .Limit}}"
+     hx-target="#results"
+     hx-push-url="true">Next &#8594;</a>
+  {{end}}
+</div>
+{{end}}
+{{end}}

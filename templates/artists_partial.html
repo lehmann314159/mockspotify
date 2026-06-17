@@ -1,0 +1,24 @@
+{{define "artists_partial.html"}}
+<table class="data-table">
+  <thead><tr><th>ID</th><th>Name</th><th>Genre</th><th></th></tr></thead>
+  <tbody>
+  {{range .Artists}}
+  <tr id="artist-{{.ID}}">
+    <td class="muted">{{.ID}}</td>
+    <td>{{.Name}}</td>
+    <td><span class="badge">{{.Genre}}</span></td>
+    <td>
+      <button class="btn-danger"
+        hx-delete="/api/artists/{{.ID}}"
+        hx-confirm="Delete {{.Name}}?"
+        hx-target="#artist-{{.ID}}"
+        hx-swap="outerHTML">Delete</button>
+    </td>
+  </tr>
+  {{else}}
+  <tr><td colspan="4" class="empty">No artists found.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{template "pagination" .}}
+{{end}}

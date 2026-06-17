@@ -1,0 +1,27 @@
+{{define "tracks_partial.html"}}
+<table class="data-table">
+  <thead><tr><th>Title</th><th>Artist</th><th>Genre</th><th>BPM</th><th>Key</th><th>Camelot</th><th></th></tr></thead>
+  <tbody>
+  {{range .Tracks}}
+  <tr id="track-{{.ID}}">
+    <td>{{.Title}}</td>
+    <td class="muted">{{.ArtistName}}</td>
+    <td><span class="badge">{{.Genre}}</span></td>
+    <td>{{printf "%.1f" .Tempo}}</td>
+    <td>{{.KeyOf}}</td>
+    <td><span class="badge camelot">{{.CamelotCode}}</span></td>
+    <td>
+      <button class="btn-danger"
+        hx-delete="/api/tracks/{{.ID}}"
+        hx-confirm="Delete {{.Title}}?"
+        hx-target="#track-{{.ID}}"
+        hx-swap="outerHTML">Delete</button>
+    </td>
+  </tr>
+  {{else}}
+  <tr><td colspan="7" class="empty">No tracks found.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{template "pagination" .}}
+{{end}}

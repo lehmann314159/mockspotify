@@ -1,0 +1,13 @@
+{{define "content"}}
+<div class="filter-bar">
+  <input type="text" name="genre" placeholder="Genre" value="{{.Genre}}"
+    hx-get="/tracks" hx-target="#results" hx-trigger="input changed delay:300ms"
+    hx-include="[name='genre'],[name='camelot_code']">
+  <input type="text" name="camelot_code" placeholder="Camelot (e.g. 8B)" value="{{.CamelotCode}}"
+    hx-get="/tracks" hx-target="#results" hx-trigger="input changed delay:300ms"
+    hx-include="[name='genre'],[name='camelot_code']">
+</div>
+<div id="results">
+  {{template "tracks_partial.html" .}}
+</div>
+{{end}}

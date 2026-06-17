@@ -1,0 +1,10 @@
+{{define "content"}}
+<div class="filter-bar">
+  <input type="text" name="genre" placeholder="Filter by genre" value="{{.Genre}}"
+    hx-get="/playlists" hx-target="#results" hx-trigger="input changed delay:300ms"
+    hx-include="[name='genre']">
+</div>
+<div id="results">
+  {{template "playlists_partial.html" .}}
+</div>
+{{end}}

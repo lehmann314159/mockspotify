@@ -1,0 +1,25 @@
+{{define "albums_partial.html"}}
+<table class="data-table">
+  <thead><tr><th>ID</th><th>Title</th><th>Genre</th><th>Year</th><th></th></tr></thead>
+  <tbody>
+  {{range .Albums}}
+  <tr id="album-{{.ID}}">
+    <td class="muted">{{.ID}}</td>
+    <td>{{.Title}}</td>
+    <td><span class="badge">{{.Genre}}</span></td>
+    <td>{{.ReleaseYear}}</td>
+    <td>
+      <button class="btn-danger"
+        hx-delete="/api/albums/{{.ID}}"
+        hx-confirm="Delete {{.Title}}?"
+        hx-target="#album-{{.ID}}"
+        hx-swap="outerHTML">Delete</button>
+    </td>
+  </tr>
+  {{else}}
+  <tr><td colspan="5" class="empty">No albums found.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{template "pagination" .}}
+{{end}}
