@@ -11,3 +11,9 @@ services:
       - MOCKSPOTIFY_DB=/app/data/mockspotify.db
       - MOCKSPOTIFY_PORT=8090
       - MOCKSPOTIFY_TOKEN=mockspotify-dev-token-2026
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
