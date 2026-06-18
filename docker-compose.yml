@@ -1,7 +1,6 @@
 services:
   mockspotify:
     image: lehmann314159/mockspotify:latest
-    build: .
     container_name: mockspotify
     restart: unless-stopped
     ports:
