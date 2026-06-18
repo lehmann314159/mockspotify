@@ -1,6 +1,8 @@
 services:
   mockspotify:
+    image: lehmann314159/mockspotify:latest
     build: .
+    container_name: mockspotify
     restart: unless-stopped
     ports:
       - "127.0.0.1:8090:8090"
