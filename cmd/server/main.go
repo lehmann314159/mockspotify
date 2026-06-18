@@ -40,11 +40,17 @@ func main() {
 	// Root mux
 	mux := http.NewServeMux()
 
-	// Token endpoint — no auth
+	// Token endpoints — no auth (both paths for compatibility)
 	mux.HandleFunc("POST /api/token", api.TokenHandler(token))
+	mux.HandleFunc("POST /v1/token", api.TokenHandler(token))
 
 	// All other /api/ routes — auth required
 	mux.Handle("/api/", api.AuthMiddleware(token, apiMux))
+
+	// Spotify-compatible /v1/ routes — auth required
+	v1Mux := http.NewServeMux()
+	api.RegisterV1(v1Mux, database)
+	mux.Handle("/v1/", api.AuthMiddleware(token, v1Mux))
 
 	// Web UI
 	mux.HandleFunc("GET /{$}", web.DashboardHandler(database))
