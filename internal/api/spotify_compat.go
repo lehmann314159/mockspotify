@@ -2,10 +2,12 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/lehmann314159/mockspotify/internal/db"
 )
 
@@ -13,7 +15,10 @@ import (
 // These endpoints accept the same Bearer token as the /api/ routes.
 func RegisterV1(mux *http.ServeMux, database *sql.DB) {
 	mux.HandleFunc("GET /v1/search", spotifySearch(database))
+	mux.HandleFunc("GET /v1/me", spotifyMe())
+	mux.HandleFunc("POST /v1/me/playlists", spotifyCreatePlaylist(database))
 	mux.HandleFunc("GET /v1/playlists/{id}/tracks", spotifyPlaylistTracks(database))
+	mux.HandleFunc("POST /v1/playlists/{id}/tracks", spotifyAddTracks(database))
 }
 
 type spotifyArtist struct {
@@ -126,6 +131,58 @@ func spotifyPlaylistTracks(database *sql.DB) http.HandlerFunc {
 			"total": total,
 			"next":  next,
 		})
+	}
+}
+
+func spotifyMe() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, http.StatusOK, map[string]any{
+			"id":           "mockuser",
+			"display_name": "Mock User",
+		})
+	}
+}
+
+func spotifyCreatePlaylist(database *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			Name   string `json:"name"`
+			Public bool   `json:"public"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			writeError(w, http.StatusBadRequest, "invalid body")
+			return
+		}
+		p := db.Playlist{
+			ID:   "pl_" + uuid.New().String()[:8],
+			Name: body.Name,
+		}
+		if err := db.InsertPlaylist(database, p); err != nil {
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		writeJSON(w, http.StatusCreated, map[string]any{"id": p.ID})
+	}
+}
+
+func spotifyAddTracks(database *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		playlistID := r.PathValue("id")
+		var body struct {
+			URIs []string `json:"uris"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			writeError(w, http.StatusBadRequest, "invalid body")
+			return
+		}
+		for i, uri := range body.URIs {
+			trackID := strings.TrimPrefix(uri, "spotify:track:")
+			if err := db.AddTrackToPlaylist(database, playlistID, trackID, i); err != nil {
+				writeError(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
+		writeJSON(w, http.StatusCreated, map[string]any{"snapshot_id": "mock"})
 	}
 }
 
