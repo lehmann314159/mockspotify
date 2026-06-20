@@ -76,7 +76,7 @@ func spotifySearch(database *sql.DB) http.HandlerFunc {
 			})
 
 		case "playlist":
-			pls, total, err := db.ListPlaylists(database, db.PlaylistFilter{Genre: q, Limit: limit, Offset: offset})
+			pls, total, err := db.ListPlaylists(database, db.PlaylistFilter{Name: q, Limit: limit, Offset: offset})
 			if err != nil {
 				writeError(w, http.StatusInternalServerError, err.Error())
 				return

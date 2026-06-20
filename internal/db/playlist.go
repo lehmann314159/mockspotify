@@ -7,6 +7,7 @@ import (
 
 type PlaylistFilter struct {
 	Genre  string
+	Name   string
 	Limit  int
 	Offset int
 }
@@ -19,10 +20,21 @@ func ListPlaylists(db *sql.DB, f PlaylistFilter) ([]Playlist, int, error) {
 		f.Limit = 100
 	}
 
-	where, args := "", []any{}
+	conds, args := []string{}, []any{}
 	if f.Genre != "" {
-		where = "WHERE genre = ?"
+		conds = append(conds, "genre = ?")
 		args = append(args, f.Genre)
+	}
+	if f.Name != "" {
+		conds = append(conds, "name LIKE ?")
+		args = append(args, "%"+f.Name+"%")
+	}
+	where := ""
+	if len(conds) > 0 {
+		where = "WHERE " + conds[0]
+		for _, c := range conds[1:] {
+			where += " AND " + c
+		}
 	}
 
 	var total int
